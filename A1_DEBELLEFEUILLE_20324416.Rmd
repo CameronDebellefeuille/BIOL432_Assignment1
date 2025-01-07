@@ -15,20 +15,90 @@ knitr::opts_chunk$set(echo = TRUE)
 
 [GitHub Repository](https://github.com/CameronDebellefeuille/BIOL432_Assignment1/blob/main/dataGenerato.R)
 
-## Loading packages
+## Setup
 
-## Loading revised measurements.csv file
+```{r}
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+
+theme_set(theme_classic())
+```
+
+
+## 1. Loading revised measurements.csv file
 
 ```{r}
 source("./dataGenerator.R")
 ```
 
-dataGenerator.R creates a data.frame called dataGen with 4 columns:
+**dataGenerator.R** creates a data.frame called dataGen with 100 rows and 4 columns:
 1. Species
 2. Limb_width
 3. Limb_length
 4. Observer
 
+This data.frame is then saved as a file called measurements.csv.
+
+```{r}
+str(dataGen)
+```
+
+
 ```{r}
 source("./dataGeneratorV2.R")
 ```
+
+**dataGeneratorV2.Rd** uses the mutate function from the dyply package to create a new column called 'Volume' in the data frame loaded from the measurements.csv file. This represents the limb volume, and was calculated using limb height and width in the equation for the volume of a cylinder. The new data frame is called measurement_data
+
+## 2. Sorting data
+
+```{r}
+measurement_data <- measurement_data %>% 
+  arrange(Species, Observer, Volume)
+head(measurement_data)
+```
+## 3. Average limb volume for each species
+
+```{r}
+measurement_data %>% 
+  group_by(Species) %>% 
+  summarise(Mean = mean(Volume, na.rm = TRUE))
+```
+
+## 4. Number of observations for each combinatio of species and observer
+
+```{r}
+measurement_data %>% 
+  group_by(Species, Observer) %>% 
+  summarise(Mean = mean(Volume), Observations = length(Volume))
+```
+
+## 5. Creating a boxplot
+
+```{r}
+ggplot(measurement_data, aes(x = Species, y = Volume, fill = Species)) +
+  geom_boxplot() +
+  ylab(bquote("Volume (" ~ cm^3 ~ ")"))
+```
+
+## Creating a multipanel plot
+
+```{r}
+ggplot(measurement_data, aes(Volume)) +
+  geom_histogram(binwidth = 1900) + facet_wrap(~ Species)
+```
+```{r}
+datalong <- measurement_data %>%
+  select("Species", "Volume") %>% 
+  pivot_longer(cols = c("Volume"),
+               names_to = "variable",
+               values_to = "value")
+
+datalong
+```
+
+
+
+
+
