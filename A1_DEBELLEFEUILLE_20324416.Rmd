@@ -1,0 +1,34 @@
+---
+title: "A1_DEBELEFEUILLE_20324416"
+author: "Cameron DeBellefeuille"
+date: "2025-01-07"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Assignment 1: R Markdown
+
+## GitHub repository
+
+[GitHub Repository](https://github.com/CameronDebellefeuille/BIOL432_Assignment1/blob/main/dataGenerato.R)
+
+## Loading packages
+
+## Loading revised measurements.csv file
+
+```{r}
+source("./dataGenerator.R")
+```
+
+dataGenerator.R creates a data.frame called dataGen with 4 columns:
+1. Species
+2. Limb_width
+3. Limb_length
+4. Observer
+
+```{r}
+source("./dataGeneratorV2.R")
+```
